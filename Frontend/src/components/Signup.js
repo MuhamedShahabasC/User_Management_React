@@ -1,10 +1,10 @@
-import Card from "../UI/Card/Card";
-import classes from "./Login.module.css";
-import Button from "../UI/Button/Button";
-import Input from "../UI/Input/Input";
-import useInput from "../../hooks/use-input";
+import Card from "./UI/Card/Card";
+import classes from "./Login/Login.module.css";
+import Button from "./UI/Button/Button";
+import Input from "./UI/Input/Input";
+import useInput from "./../hooks/use-input";
 
-const Login = (props) => {
+const Signup = (props) => {
   const {
     value: enteredEmail,
     hasError: emailHasError,
@@ -23,18 +23,38 @@ const Login = (props) => {
     reset: resetPassword,
   } = useInput((value) => value.length > 7);
 
+  const {
+    value: enteredName,
+    hasError: nameHasError,
+    isValid: nameIsValid,
+    valueChangeHandler: nameInputHandler,
+    reset: resetName,
+  } = useInput((value) => value.length > 3);
+
   const submitHandler = (event) => {
     event.preventDefault();
-    props.logger(enteredEmail.toLowerCase(), enteredPassword);
+    props.addUser({
+      name: enteredName,
+      email: enteredEmail.toLowerCase(),
+      password: enteredPassword,
+    });
     resetEmail();
     resetPassword();
+    resetName();
   };
 
-  const formIsValid = emailIsValid && passwordIsValid;
+  const formIsValid = emailIsValid && passwordIsValid && nameIsValid;
 
   return (
     <Card className={classes.login}>
       <form onSubmit={submitHandler}>
+        <Input
+          id="name"
+          label="Name"
+          type="text"
+          onChange={nameInputHandler}
+          isValid={!nameHasError}
+        />
         <Input
           id="email"
           label="E-mail"
@@ -49,11 +69,10 @@ const Login = (props) => {
           onChange={passwordInputHandler}
           isValid={!passwordHasError}
         />
-          <h6 className={classes.error}>{props.error}</h6>
-        
+        <h6 className={classes.error}>{props.error}</h6>
         <div className={classes.actions}>
           <Button type="submit" className={classes.btn} disabled={!formIsValid}>
-            Login
+            Sign Up
           </Button>
         </div>
       </form>
@@ -61,4 +80,4 @@ const Login = (props) => {
   );
 };
 
-export default Login;
+export default Signup;

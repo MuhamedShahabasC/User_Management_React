@@ -54,3 +54,9 @@
   }
 
 }
+
+.error {
+  color: rgb(182, 0, 0);
+  text-align: center;
+  margin: 0.7rem;
+}
