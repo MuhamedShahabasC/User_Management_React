@@ -30,7 +30,12 @@ const Login = (props) => {
     resetPassword();
   };
 
-  const formIsValid = emailIsValid && passwordIsValid;
+  let formIsValid;  
+  if(emailIsValid && passwordIsValid){
+    formIsValid = true
+  }else{
+    formIsValid = false
+  }
 
   return (
     <Card className={classes.login}>

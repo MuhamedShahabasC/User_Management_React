@@ -2,8 +2,9 @@ import classes from "../components/MainHeader/MainHeader.module.css";
 import Signup from "../components/Signup";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import Button from "../components/UI/Button/Button";
 
 const UserSignUp = () => {
   const [error, setError] = useState({});
@@ -27,15 +28,19 @@ const UserSignUp = () => {
         } else {
           navigate("");
         }
-      }).catch(error => {
-        setError(error.response.data);
       })
+      .catch((error) => {
+        setError(error.response.data);
+      });
   };
 
   return (
     <>
       <header className={classes["main-header"]}>
         <h3>User Sign Up</h3>
+        <Link to="/">
+          <Button>Home</Button>
+        </Link>
       </header>
       <Signup error={error?.message} addUser={addUserHandler} />
     </>

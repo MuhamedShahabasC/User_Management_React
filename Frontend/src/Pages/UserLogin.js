@@ -1,10 +1,11 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Login from "../components/Login/Login";
 import classes from "../components/MainHeader/MainHeader.module.css";
 import axios from "axios";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { currentUserActions } from "../store/current-user";
+import Button from "../components/UI/Button/Button";
 
 const UserLogin = () => {
   const [error, setError] = useState({});
@@ -35,6 +36,9 @@ const UserLogin = () => {
     <>
       <header className={classes["main-header"]}>
         <h3>User Login</h3>
+        <Link to="/">
+          <Button>Home</Button>
+        </Link>
       </header>
       <Login error={error?.message} logger={userLoginHandler} />
     </>

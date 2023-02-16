@@ -1,13 +1,14 @@
-import React from 'react';
+import React from "react";
 
-import Navigation from './Navigation';
-import classes from './MainHeader.module.css';
+import Navigation from "./Navigation";
+import classes from "./MainHeader.module.css";
 
 const MainHeader = (props) => {
   return (
-    <header className={classes['main-header']}>
+    <header className={classes["main-header"]}>
       <h3>User Management</h3>
-      <Navigation onLogout={props.onLogout}/>
+
+      <Navigation onLogout={props.onLogout} />
     </header>
   );
 };
