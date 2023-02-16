@@ -7,6 +7,7 @@ import SingleUser from "../Home/SingleUser";
 import Signup from "../Signup";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function AdminHome() {
   const [users, setUsers] = useState([]);
@@ -14,10 +15,16 @@ function AdminHome() {
   const [addUserButtonClick, setButton] = useState(false);
   const [error, setError] = useState();
   const navigate = useNavigate();
+  const adminToken = useSelector((state) => state.admin);
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/admin/allUsers`)
+      .get(`${process.env.REACT_APP_BACKEND_URL}/admin/allUsers`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${adminToken}`,
+        },
+      })
       .then((res) => {
         setUsers(res.data.allUsers);
       })
@@ -33,19 +40,25 @@ function AdminHome() {
 
   function getAllUsers() {
     axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/admin/allUsers`)
+      .get(`${process.env.REACT_APP_BACKEND_URL}/admin/allUsers`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${adminToken}`,
+        },
+      })
       .then((res) => {
         setUsers(res.data.allUsers);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        navigate("/admin/login");
+      });
   }
   const filteredUsers = users.filter((item) =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
   const renderedUsers = filteredUsers.map((user) => {
-    return (
-      <SingleUser key={user._id} user={user} refreshUsers={getAllUsers} />
-    );
+    return <SingleUser key={user._id} user={user} refreshUsers={getAllUsers} />;
   });
 
   const onClickHandler = () => {
@@ -55,7 +68,12 @@ function AdminHome() {
   const addUserHandler = async (userData) => {
     setError(null);
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/admin/addUser`, userData)
+      .post(`${process.env.REACT_APP_BACKEND_URL}/admin/addUser`, userData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${adminToken}`,
+        },
+      })
       .then((res) => {
         Swal.fire({
           icon: "success",

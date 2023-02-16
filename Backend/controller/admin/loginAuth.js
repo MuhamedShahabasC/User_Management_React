@@ -2,8 +2,8 @@ const Users = require("../../model/users");
 const bcrypt = require("bcrypt");
 
 const jwt = require("jsonwebtoken");
-const createToken = (email) => {
-  return jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "1d" });
+const createToken = (_id) => {
+  return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "1d" });
 };
 
 const loginAuth = async (req, res) => {

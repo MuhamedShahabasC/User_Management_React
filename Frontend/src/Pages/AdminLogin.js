@@ -4,10 +4,13 @@ import classes from "../components/MainHeader/MainHeader.module.css";
 import axios from "axios";
 import { useState } from "react";
 import Button from "../components/UI/Button/Button";
+import { useDispatch } from "react-redux";
+import { adminSliceActions } from "../store/admin";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
   const [error, setError] = useState();
+  const dispatch = useDispatch();
   const adminLoginHandler = async (email, password) => {
     setError(null);
     await axios
@@ -16,8 +19,8 @@ const AdminLogin = () => {
         password,
       })
       .then((res) => {
-        // const { adminToken } = res.data;
-        // console.log(adminToken); JWT FOR REDUX
+        const { adminToken } = res.data;
+        dispatch(adminSliceActions.login(adminToken));
         navigate("/admin/dashboard");
       })
       .catch((err) => {

@@ -1,11 +1,13 @@
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 
 function SingleUser({ user, refreshUsers }) {
   const [name, setName] = useState(user.name);
-  const [editButtonClick, setEdit] = useState(false);
+  const [edit, setEdit] = useState(false);
   const inputRef = useRef();
+  const adminToken = useSelector((state) => state.admin);
 
   useEffect(() => {
     const handleOuterClick = (e) => {
@@ -19,11 +21,13 @@ function SingleUser({ user, refreshUsers }) {
       window.removeEventListener("click", handleOuterClick);
     };
   }, []);
+
   const editHandler = (e) => {
     e.preventDefault();
-    setEdit(!editButtonClick);
+    setEdit(!edit);
     setName(user.name);
   };
+
   const deleteHandler = () => {
     Swal.fire({
       text: `Proceed to delete -  ${name}`,
@@ -36,7 +40,13 @@ function SingleUser({ user, refreshUsers }) {
       if (result.isConfirmed) {
         axios
           .delete(
-            `${process.env.REACT_APP_BACKEND_URL}/admin/deleteuser/${user._id}`
+            `${process.env.REACT_APP_BACKEND_URL}/admin/deleteuser/${user._id}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${adminToken}`,
+              },
+            }
           )
           .then((res) => {
             Swal.fire({
@@ -64,12 +74,31 @@ function SingleUser({ user, refreshUsers }) {
     setName(e.target.value);
   };
   const confirmHandler = () => {
-    setEdit(!editButtonClick);
+    setEdit(!edit);
     axios
-      .put(`${process.env.REACT_APP_BACKEND_URL}/admin/edituser/${user._id}`, {
-        name,
+      .put(
+        `${process.env.REACT_APP_BACKEND_URL}/admin/edituser/${user._id}`,
+        {
+          name,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${adminToken}`,
+          },
+        }
+      )
+      .then((res) => {
+        Swal.fire({
+          icon: "success",
+          text: "User Edited Successfully",
+          showConfirmButton: false,
+          timer: 1200,
+          width: "300px",
+        }).then(() => {
+          refreshUsers();
+        });
       })
-      .then((res) => refreshUsers())
       .catch((err) => {
         const { message } = err.response.data;
         Swal.fire({
@@ -82,7 +111,7 @@ function SingleUser({ user, refreshUsers }) {
   return (
     <tr ref={inputRef}>
       <td>
-        {editButtonClick ? (
+        {edit ? (
           <input
             className="form-control"
             value={name}
@@ -96,7 +125,7 @@ function SingleUser({ user, refreshUsers }) {
         <span className="mx-3">{user.email}</span>
       </td>
       <td>
-        {editButtonClick ? (
+        {edit ? (
           <div className="d-flex">
             <button onClick={confirmHandler} className="btn border mx-3">
               <i class="fa-regular fa-square-check"></i>
