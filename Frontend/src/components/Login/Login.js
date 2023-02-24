@@ -30,12 +30,7 @@ const Login = (props) => {
     resetPassword();
   };
 
-  let formIsValid;  
-  if(emailIsValid && passwordIsValid){
-    formIsValid = true
-  }else{
-    formIsValid = false
-  }
+  let formIsValid = emailIsValid && passwordIsValid;
 
   return (
     <Card className={classes.login}>
@@ -54,8 +49,8 @@ const Login = (props) => {
           onChange={passwordInputHandler}
           isValid={!passwordHasError}
         />
-          <h6 className={classes.error}>{props.error}</h6>
-        
+        <h6 className={classes.error}>{props.error}</h6>
+
         <div className={classes.actions}>
           <Button type="submit" className={classes.btn} disabled={!formIsValid}>
             Login

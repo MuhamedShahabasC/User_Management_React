@@ -59,8 +59,8 @@ const Home = (props) => {
       .catch((err) => console.log(err));
   };
 
-  const handleChange = (e) => {
-    const file = e.target.files[0];
+  const handleChange = (event) => {
+    const file = event.target.files[0];
     setFile(file);
   };
 
