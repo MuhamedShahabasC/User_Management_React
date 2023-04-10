@@ -1,7 +1,6 @@
 const jwt = require("jsonwebtoken");
 
 const checkAuth = async (req, res, next) => {
-  console.log('token checking')
   const { authorization } = req.headers;
   if (!authorization) {
     return res.status(401).send({ message: "Authorization required" });
